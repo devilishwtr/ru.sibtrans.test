@@ -31,7 +31,7 @@ public class CalculatorMaxiObject extends PageObjects {
     public SelenideElement MARKIROVKA_SHTUK_FIELD = $("#content_p > div > div.d2l > div > div:nth-child(19) > input");
     public SelenideElement SERVICE_FROM_KONSOLIDACIYA = $$("#\\31 25").find(Condition.name("chBoxServiceDelivOut"));
     public SelenideElement SERVICE_FROM_HRANENIE_DAYS = $$("#\\31 26").find(Condition.name("chBoxServiceDelivOut"));
-    public SelenideElement HRANENIE_SHTUK_FIELD = $("#content_p > div > div.d2l > div > div:nth-child(31) > input");
+    public SelenideElement HRANENIE_DAYS_FIELD = $("#content_p > div > div.d2l > div > div:nth-child(31) > input");
     public SelenideElement SERVICE_FROM_POGRUZ_RABOTA = $$("#\\31 28").find(Condition.name("chBoxServiceDelivOut"));
     public SelenideElement SERVICE_FROM_OBRESHETKA = $("#\\31 29");
     public SelenideElement SERVICE_FROM_DOCUMENTS_SHTUK = $$("#\\31 30").find(Condition.name("chBoxServiceDelivOut"));

@@ -28,7 +28,7 @@ public class Settings {
         }
 
         public static void openVia(){
-            openViaFirefox();
+            openViaChrome();
         }
         public static void sleep() throws InterruptedException {
             Thread.sleep(1000);

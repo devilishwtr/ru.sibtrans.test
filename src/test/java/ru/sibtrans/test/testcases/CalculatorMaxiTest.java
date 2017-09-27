@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import org.junit.jupiter.api.*;
 import ru.sibtrans.main.Cities;
 import ru.sibtrans.main.maxicalculator.CalculatorMaxiObject;
+import ru.sibtrans.main.rates.sbornyeavtozhdperevozki.SbornyeAvtoZhdPerevozki;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import static ru.sibtrans.main.maxicalculator.CalculatorMaxiObject.*;
 class CalculatorMaxiTest {
     CalculatorMaxiObject maxc = new CalculatorMaxiObject();
     Cities cities = new Cities();
+    SbornyeAvtoZhdPerevozki sazp = new SbornyeAvtoZhdPerevozki();
 
     CalculatorMaxiTest() throws FileNotFoundException {
     }
@@ -187,7 +189,7 @@ class CalculatorMaxiTest {
     }
     @Test
     @DisplayName("Расчет с учетом перевозки хрупкого груза")
-    void positiveClickFrigile() throws InterruptedException, IOException {
+    void positiveClickFragile() throws InterruptedException, IOException {
         maxc.CITY_FROM_BRANCH_ENTER();
         maxc.CITY_TO_BRANCH_ENTER();
         maxc.BOX_WEIGHT_ENTER();
@@ -203,14 +205,13 @@ class CalculatorMaxiTest {
 //
     @Test
     @DisplayName("При дезактивации чекбокса в пункте отправления внутренние чекбоксы отключаются и расчет обновляется")
-    void positiveAddServiceFromDeactive() throws IOException, InterruptedException {
+    void positiveAddServiceFromDeactivate() throws IOException, InterruptedException {
         maxc.CITY_FROM_FIELD.val("Москва");
         maxc.CITY_TO_BRANCH_ENTER();
         maxc.BOX_WEIGHT_ENTER();
         maxc.BOX_VOLUME_ENTER();
         maxc.DELIVERY_IN_CHECKBOX.click();
-        maxc.SUBMIT_BUTTON.click();
-        sleep();
+        maxc.SUBMIT_BUTTON_CLICK();
         String temp = maxc.RESULT.text();
         maxc.ADD_SERVICE_CITY_FROM.click();
         maxc.SERVICE_FROM_DOCUMENTS_SHTUK.click();
@@ -223,14 +224,13 @@ class CalculatorMaxiTest {
 
     @Test
     @DisplayName("При дезактивации чекбокса в пункте назначения внутренние чекбоксы отключаются и расчет обновляется")
-    void positiveAddServiceToDeactive() throws IOException, InterruptedException {
+    void positiveAddServiceToDeactivate() throws IOException, InterruptedException {
         maxc.CITY_FROM_FIELD.val("Новосибирск");
         maxc.CITY_TO_FIELD.val("Москва");
         maxc.BOX_WEIGHT_ENTER();
         maxc.BOX_VOLUME_ENTER();
         maxc.DELIVERY_IN_CHECKBOX.click();
-        maxc.SUBMIT_BUTTON.click();
-        sleep();
+        maxc.SUBMIT_BUTTON_CLICK();
         String temp = maxc.RESULT.text();
         maxc.ADD_SERVICE_CITY_TO.click();
         maxc.SERVICE_TO_DOCUMENTS_SHTUK.click();
@@ -238,7 +238,47 @@ class CalculatorMaxiTest {
         maxc.SUBMIT_BUTTON_CLICK();
         maxc.ADD_SERVICE_CITY_TO.click();
         maxc.SUBMIT_BUTTON_CLICK();
-        maxc.RESULT.shouldHave(Condition.value(temp));
+        maxc.RESULT.shouldHave(Condition.exactText(temp));
+    }
+
+    @Test
+    @DisplayName("Расчет с учетом активации чекбоксов 'сервисы в пункте отправления'")
+    void positiveActivateServiceFromCheckbox() throws IOException, InterruptedException {
+        maxc.CITY_FROM_FIELD.val("Москва");
+        maxc.CITY_TO_BRANCH_ENTER();
+        maxc.BOX_VOLUME_ENTER();
+        maxc.BOX_WEIGHT_ENTER();
+        maxc.ADD_SERVICE_CITY_FROM.click();
+        maxc.SERVICE_FROM_DOCUMENTS_SHTUK.click();
+        maxc.SERVICE_FROM_OBRESHETKA.click();
+        maxc.SERVICE_FROM_HRANENIE_DAYS.click();
+        maxc.SERVICE_FROM_KONSOLIDACIYA.click();
+        maxc.SERVICE_FROM_PALLETIROVANIE.click();
+        maxc.SERVICE_FROM_POGRUZ_RABOTA.click();
+        maxc.SERVICE_FROM_SKLAD.click();
+        maxc.SERVICE_FROM_MARKIROVKA_SHTUK.click();
+        maxc.DOCUMENTS_SHTUK_FIELD.val("25");
+        maxc.HRANENIE_DAYS_FIELD.val("26");
+        maxc.SUBMIT_BUTTON_CLICK();
+        maxc.RESULT.shouldNotHave(errorMessage);
+    }
+
+    @Test
+    @DisplayName("Расчет с учетом проверки активации чекбоксов 'сервисы в пункте назначения'")
+    void positiveAddServiceToCheckbox() throws IOException, InterruptedException {
+        maxc.CITY_FROM_BRANCH_ENTER();
+        maxc.CITY_TO_FIELD.val("Москва");
+        maxc.BOX_VOLUME_ENTER();
+        maxc.BOX_WEIGHT_ENTER();
+        maxc.THERMAL.click();
+        maxc.ADD_SERVICE_CITY_TO.click();
+        maxc.SERVICE_TO_RASTENTOVKA_SHTUK.click();
+        maxc.RASTENTOVKA_SHTUK_FIELD_TO.val("99");
+        maxc.SERVICE_TO_OBRESHETKA.click();
+        maxc.SERVICE_TO_STRETCHPLENKA.click();
+        maxc.SUBMIT_BUTTON_CLICK();
+        maxc.RESULT.shouldNotHave(errorMessage);
+//        maxc.RESULT.shouldBe(Condition.matchText(readPrice(readMain)));
     }
 
     @AfterAll
@@ -248,7 +288,7 @@ class CalculatorMaxiTest {
 }
 
 class CalculatorMaxiTestNegative {
-    CalculatorMaxiObject maxc = new CalculatorMaxiObject();
+    private CalculatorMaxiObject maxc = new CalculatorMaxiObject();
 
     @BeforeAll
     static void setUp() {
@@ -376,11 +416,24 @@ class CalculatorMaxiTestNegative {
 
     @Test
     @DisplayName("Ввод некоректных значений BOX Объем - [а-яА-Яa-zA-Z_symbols]")
-    void NegativeEnterIncorrectVolume1() {
+    void negativeEnterIncorrectVolume1() {
         maxc.BOX_VOLUME.val("ывйввфывфыпафыипфчзтзшйетЯЯВФЫВФйADSADASVFASasdabnpohfjdeoisd@#@!%@!*)+_;'@&(%()_");
         maxc.BOX_WEIGHT_ENTER();
         maxc.BOX_VOLUME.shouldBe(Condition.empty);
     }
+
+    @Test
+    @DisplayName("Ввод некорктных значений в поля штук доп.сервиса")
+    void negativeEnterIncorrectAddService() throws IOException {
+        maxc.ADD_SERVICE_CITY_FROM.click();
+        maxc.SERVICE_FROM_MARKIROVKA_SHTUK.click();
+        maxc.MARKIROVKA_SHTUK_FIELD.val("ads42ывыюб.б23ж(*&^^#@'\"-)+_((*&^^#$@*!><ML:MKJDNBHIFGBIEUJNFOWIMЛАЩШОУЩШГТРАЩЦШТ");
+        maxc.SERVICE_FROM_HRANENIE_DAYS.click();
+        maxc.HRANENIE_DAYS_FIELD.val("<<M><M>NLJNOIJIOR@J)($U@(*HT@(KnmLц22KJfdkljdipofjjлвыоа%?:*()_25LKLKHJIYGUYIU(@$*@)");
+        maxc.MARKIROVKA_SHTUK_FIELD.shouldHave(Condition.value("4223"));
+        maxc.HRANENIE_DAYS_FIELD.shouldHave(Condition.value("2225"));
+    }
+
 
 
 
