@@ -10,9 +10,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static com.codeborne.selenide.Selenide.close;
+import static ru.sibtrans.main.Cities.calcResult;
 import static ru.sibtrans.main.PageObjects.CostCalculateButtonClick;
 import static ru.sibtrans.main.Settings.openVia;
-import static ru.sibtrans.main.Settings.sleep;
 import static ru.sibtrans.main.access.AccessPage.enterHomePage;
 import static ru.sibtrans.main.maxicalculator.CalculatorMaxiObject.*;
 
@@ -35,16 +35,14 @@ class CalculatorMaxiTest {
     }
 
     @Test
-    @DisplayName("Расчет с учетом ввода городов для которых есть маршрут в прейскуранте, филиал - филиал")
+    @DisplayName("Расчет с учетом ввода городов для маршрута филиал - филиал")
     void positiveBranchBracnh() throws InterruptedException, IOException {
         maxc.CITY_FROM_BRANCH_ENTER();
         maxc.CITY_TO_BRANCH_ENTER();
         maxc.BOX_VOLUME_ENTER();
         maxc.BOX_WEIGHT_ENTER();
         maxc.SUBMIT_BUTTON_CLICK();
-        sleep();
         maxc.RESULT.shouldNotHave(errorMessage);
-        //Омск не едет в Алейск
     }
 
     @Test
@@ -54,9 +52,8 @@ class CalculatorMaxiTest {
         maxc.CITY_TO_FIELD.val(regionalTo).pressEnter();
         maxc.BOX_WEIGHT_ENTER();
         maxc.BOX_VOLUME_ENTER();
-        maxc.SUBMIT_BUTTON.click();
-        sleep();
-        maxc.RESULT.shouldHave(errorMessage);
+        maxc.SUBMIT_BUTTON_CLICK();
+        maxc.RESULT.shouldHave(zeroCalc);
     }
 
     @Test
@@ -66,13 +63,11 @@ class CalculatorMaxiTest {
         maxc.CITY_TO_BRANCH_ENTER();
         maxc.BOX_WEIGHT_ENTER();
         maxc.BOX_VOLUME_ENTER();
-        maxc.SUBMIT_BUTTON.click();
-        sleep();
+        maxc.SUBMIT_BUTTON_CLICK();
         String temp = maxc.RESULT.text();
         maxc.CITY_FROM_FIELD.val("das");
         maxc.CITY_TO_FIELD.val("dasdq");
-        sleep();
-        maxc.SUBMIT_BUTTON.click();
+        maxc.SUBMIT_BUTTON_CLICK();
         maxc.RESULT.shouldNotHave(Condition.text(temp));
     }
 
@@ -85,8 +80,7 @@ class CalculatorMaxiTest {
         maxc.BOX_VOLUME_ENTER();
         maxc.BOX_WEIGHT_ENTER();
         //When
-        maxc.SUBMIT_BUTTON.click();
-        sleep();
+        maxc.SUBMIT_BUTTON_CLICK();
         maxc.RESULT.shouldHave(errorMessage);
     }
 
@@ -98,9 +92,9 @@ class CalculatorMaxiTest {
         maxc.BOX_VOLUME_ENTER();
         maxc.BOX_WEIGHT_ENTER();
         maxc.DELIVERY_OUT_CHECKBOX.click();
-        maxc.SUBMIT_BUTTON.click();
-        sleep();
+        maxc.SUBMIT_BUTTON_CLICK();
         maxc.RESULT.shouldNotHave(errorMessage);
+        maxc.RESULT.shouldNotHave(zeroCalc);
     }
 
     @Test
@@ -111,9 +105,9 @@ class CalculatorMaxiTest {
         maxc.BOX_VOLUME_ENTER();
         maxc.BOX_WEIGHT_ENTER();
         maxc.DELIVERY_IN_CHECKBOX.click();
-        maxc.SUBMIT_BUTTON.click();
-        sleep();
+        maxc.SUBMIT_BUTTON_CLICK();
         maxc.RESULT.shouldNotHave(errorMessage);
+        maxc.RESULT.shouldNotHave(zeroCalc);
     }
                                         //Грузоотправители
     @Test
@@ -124,8 +118,7 @@ class CalculatorMaxiTest {
         maxc.BOX_VOLUME_ENTER();
         maxc.BOX_WEIGHT_ENTER();
         maxc.DELIVERY_OUT_CHECKBOX.click();
-        maxc.SUBMIT_BUTTON.click();
-        sleep();
+        maxc.SUBMIT_BUTTON_CLICK();
         maxc.RESULT.shouldNotHave(errorMessage);
     }
 
@@ -137,8 +130,7 @@ class CalculatorMaxiTest {
         maxc.BOX_VOLUME_ENTER();
         maxc.BOX_WEIGHT_ENTER();
         maxc.DELIVERY_IN_CHECKBOX.click();
-        maxc.SUBMIT_BUTTON.click();
-        sleep();
+        maxc.SUBMIT_BUTTON_CLICK();
         maxc.RESULT.shouldNotHave(errorMessage);
     }
 
@@ -151,8 +143,7 @@ class CalculatorMaxiTest {
         maxc.BOX_VOLUME_ENTER();
         maxc.DELIVERY_IN_CHECKBOX.click();
         maxc.DELIVERY_OUT_CHECKBOX.click();
-        maxc.SUBMIT_BUTTON.click();
-        sleep();
+        maxc.SUBMIT_BUTTON_CLICK();
         maxc.RESULT.shouldNotHave(errorMessage);
     }
 
@@ -167,10 +158,8 @@ class CalculatorMaxiTest {
         maxc.DELIVERY_OUT_CHECKBOX.click();
         maxc.DELIVERY_IN_CHECKBOX.click();
         maxc.THERMAL.click();
-        maxc.SUBMIT_BUTTON.click();
-        sleep();
+        maxc.SUBMIT_BUTTON_CLICK();
         maxc.RESULT.shouldNotHave(errorMessage);
-
         }
 
     @Test
@@ -183,8 +172,7 @@ class CalculatorMaxiTest {
         maxc.DELIVERY_OUT_CHECKBOX.click();
         maxc.DELIVERY_IN_CHECKBOX.click();
         maxc.OVERSIZED.click();
-        maxc.SUBMIT_BUTTON.click();
-        sleep();
+        maxc.SUBMIT_BUTTON_CLICK();
         maxc.RESULT.shouldNotHave(errorMessage);
     }
     @Test
@@ -197,8 +185,7 @@ class CalculatorMaxiTest {
         maxc.DELIVERY_OUT_CHECKBOX.click();
         maxc.DELIVERY_IN_CHECKBOX.click();
         maxc.FRAGILE.click();
-        maxc.SUBMIT_BUTTON.click();
-        sleep();
+        maxc.SUBMIT_BUTTON_CLICK();
         maxc.RESULT.shouldNotHave(errorMessage);
     }
     //TODO Не работают нормально сервисы
@@ -260,7 +247,7 @@ class CalculatorMaxiTest {
         maxc.DOCUMENTS_SHTUK_FIELD.val("25");
         maxc.HRANENIE_DAYS_FIELD.val("26");
         maxc.SUBMIT_BUTTON_CLICK();
-        maxc.RESULT.shouldNotHave(errorMessage);
+        maxc.RESULT.shouldHave(errorMessage);
     }
 
     @Test
@@ -278,7 +265,202 @@ class CalculatorMaxiTest {
         maxc.SERVICE_TO_STRETCHPLENKA.click();
         maxc.SUBMIT_BUTTON_CLICK();
         maxc.RESULT.shouldNotHave(errorMessage);
-//        maxc.RESULT.shouldBe(Condition.matchText(readPrice(readMain)));
+    }
+
+    @AfterAll
+    static void terDown(){
+        close();
+    }
+}
+
+class ValidationCalculation {
+    CalculatorMaxiObject maxc = new CalculatorMaxiObject();
+
+    @BeforeAll
+    static void setUp() {
+        openVia();
+        enterHomePage();
+    }
+
+    @BeforeEach
+    void setForEach(){
+        CostCalculateButtonClick();
+    }
+
+    @Test
+    @DisplayName("Валидация расчета при вводе ПО, ПН, ВОХ")
+    void validationTest1 () throws InterruptedException, IOException {
+        maxc.BASE_ENTER();
+        maxc.SUBMIT_BUTTON_CLICK();
+        maxc.RESULT.shouldHave(Condition.matchText(calcResult(0)));
+    }
+
+    @Test
+    @DisplayName("Валидация - Отправитель\tТепловой\tВПО_БЕЗ_ШТУК, ")
+    void validationTest2 () throws InterruptedException, IOException {
+        maxc.BASE_ENTER();
+        maxc.DELIVERY_OUT_CHECKBOX.click();
+        maxc.THERMAL.click();
+        maxc.ADD_SERVICE_CITY_FROM.click();
+        maxc.SERVICE_FROM_POGRUZ_RABOTA.click();
+        maxc.SUBMIT_BUTTON_CLICK();
+        maxc.RESULT.shouldHave(Condition.matchText(calcResult(1)));
+    }
+
+    @Test
+    @DisplayName("Валидация - Получатель\tНегабарит\tВПН_СО_ШТУКАМИ")
+    void validationTest3() throws InterruptedException, IOException {
+        maxc.BASE_ENTER();
+        maxc.DELIVERY_IN_CHECKBOX.click();
+        maxc.OVERSIZED.click();
+        maxc.ADD_SERVICE_CITY_TO.click();
+        maxc.SERVICE_TO_DOCUMENTS_SHTUK.click();
+        maxc.DOCUMENTS_SHTUK_FIELD_TO.val("25");
+        maxc.SERVICE_TO_POGRUZ_RABOTA.click();
+        maxc.SUBMIT_BUTTON_CLICK();
+        maxc.RESULT.shouldHave(Condition.exactText(calcResult(2)));
+    }
+
+    @Test
+    @DisplayName("Валидация - Вместе\tХрупкий\tВПО_ВПН_СО_ШТУКАМИ_ИБЕЗ")
+    void validationTest4() throws InterruptedException, IOException {
+        maxc.BASE_ENTER();
+        maxc.FRAGILE.click();
+        maxc.DELIVERY_OUT_CHECKBOX.click();
+        maxc.DELIVERY_IN_CHECKBOX.click();
+        maxc.ADD_SERVICE_CITY_FROM.click();
+        maxc.SERVICE_FROM_DOCUMENTS_SHTUK.click();
+        maxc.DOCUMENTS_SHTUK_FIELD.val("25");
+        maxc.ADD_SERVICE_CITY_TO.click();
+        maxc.SERVICE_TO_PALLETIROVANIE.click();
+        maxc.SERVICE_TO_DOCUMENTS_SHTUK.click();
+        maxc.DOCUMENTS_SHTUK_FIELD_TO.val("25");
+        maxc.SUBMIT_BUTTON_CLICK();
+        maxc.RESULT.shouldHave(Condition.exactText(calcResult(3)));
+    }
+
+    @Test
+    @DisplayName("Валидация - Отправитель\tНегабарит\tВПО_ВПН_СО_ШТУКАМИ_ИБЕЗ")
+    void validationTest5() throws InterruptedException, IOException {
+        maxc.BASE_ENTER();
+        maxc.DELIVERY_OUT_CHECKBOX.click();
+        maxc.OVERSIZED.click();
+        maxc.ADD_SERVICE_CITY_FROM.click();
+        maxc.ADD_SERVICE_CITY_TO.click();
+        maxc.SERVICE_FROM_POGRUZ_RABOTA.click();
+        maxc.SERVICE_FROM_DOCUMENTS_SHTUK.click();
+        maxc.DOCUMENTS_SHTUK_FIELD.val("30");
+        maxc.SERVICE_TO_STRETCHPLENKA.click();
+        maxc.SERVICE_TO_PALLETIROVANIE.click();
+        maxc.SERVICE_TO_DOCUMENTS_SHTUK.click();
+        maxc.DOCUMENTS_SHTUK_FIELD_TO.val("25");
+        maxc.SERVICE_TO_HRANENIE_DAYS.click();
+        maxc.HRANENIE_DAYS_FIELD_TO.val("10");
+        maxc.SUBMIT_BUTTON_CLICK();
+        maxc.RESULT.shouldHave(Condition.exactText(calcResult(4)));
+    }
+
+    @Test
+    @DisplayName("Валидация - Получатель\tХрупкий\tВПО_БЕЗ_ШТУК")
+    void validationTest6() throws InterruptedException, IOException {
+        maxc.BASE_ENTER();
+        maxc.DELIVERY_OUT_CHECKBOX.click();
+        maxc.FRAGILE.click();
+        maxc.ADD_SERVICE_CITY_FROM.click();
+        maxc.SERVICE_FROM_POGRUZ_RABOTA.click();
+        maxc.SUBMIT_BUTTON_CLICK();
+        maxc.RESULT.shouldHave(Condition.exactText(calcResult(5)));
+    }
+
+    @Test
+    @DisplayName("Валидация - \tВместе\tТепловой\tВПН_СО_ШТУКАМИ")
+    void validationTest7() throws InterruptedException, IOException {
+        maxc.BASE_ENTER();
+        maxc.DELIVERY_OUT_CHECKBOX.click();
+        maxc.DELIVERY_IN_CHECKBOX.click();
+        maxc.THERMAL.click();
+        maxc.ADD_SERVICE_CITY_TO.click();
+        maxc.SERVICE_TO_HRANENIE_DAYS.click();
+        maxc.HRANENIE_DAYS_FIELD_TO.val("25");
+        maxc.SERVICE_TO_DOCUMENTS_SHTUK.click();
+        maxc.DOCUMENTS_SHTUK_FIELD_TO.val("25");
+        maxc.SUBMIT_BUTTON_CLICK();
+        maxc.RESULT.shouldHave(Condition.exactText(calcResult(6)));
+    }
+
+    @Test
+    @DisplayName("Валидация - Отправитель\tХрупкий\tВПН_СО_ШТУКАМИ")
+    void validationTest8() throws InterruptedException, IOException {
+        maxc.BASE_ENTER();
+        maxc.DELIVERY_IN_CHECKBOX.click();
+        maxc.FRAGILE.click();
+        maxc.ADD_SERVICE_CITY_TO.click();
+        maxc.SERVICE_TO_POLI_MESHOK_SHTUK.click();
+        maxc.POLI_MESHOK_SHTUK_FIELD_TO.val("25");
+        maxc.SERVICE_TO_HRANENIE_DAYS.click();
+        maxc.HRANENIE_DAYS_FIELD_TO.val("25");
+        maxc.SERVICE_TO_DOCUMENTS_SHTUK.click();
+        maxc.DOCUMENTS_SHTUK_FIELD_TO.val("25");
+        maxc.SUBMIT_BUTTON_CLICK();
+        maxc.RESULT.shouldHave(Condition.exactText(calcResult(7)));
+    }
+
+    @Test
+    @DisplayName("Валидация - \tПолучатель\tВсе условия\tВПО_ВПН_СО_ШТУКАМИ_ИБЕЗ\t")
+    void validationTest9() throws InterruptedException, IOException {
+        maxc.BASE_ENTER();
+        maxc.DELIVERY_OUT_CHECKBOX.click();
+        maxc.THERMAL.click();
+        maxc.FRAGILE.click();
+        maxc.OVERSIZED.click();
+        maxc.ADD_SERVICE_CITY_TO.click();
+        maxc.SERVICE_TO_POLI_MESHOK_SHTUK.click();
+        maxc.POLI_MESHOK_SHTUK_FIELD_TO.val("25");
+        maxc.SERVICE_TO_HRANENIE_DAYS.click();
+        maxc.HRANENIE_DAYS_FIELD_TO.val("25");
+        maxc.SERVICE_TO_DOCUMENTS_SHTUK.click();
+        maxc.DOCUMENTS_SHTUK_FIELD_TO.val("25");
+        maxc.ADD_SERVICE_CITY_FROM.click();
+        maxc.SERVICE_FROM_POGRUZ_RABOTA.click();
+        maxc.SERVICE_FROM_DOCUMENTS_SHTUK.click();
+        maxc.DOCUMENTS_SHTUK_FIELD.val("30");
+        maxc.SUBMIT_BUTTON_CLICK();
+        maxc.RESULT.shouldHave(Condition.exactText(calcResult(8)));
+    }
+
+    @Test
+    @DisplayName("Валидация - \tВместе\tНегабарит\tВПО_БЕЗ_ШТУК")
+    void validationTest10() throws InterruptedException, IOException {
+        maxc.BASE_ENTER();
+        maxc.DELIVERY_OUT_CHECKBOX.click();
+        maxc.DELIVERY_IN_CHECKBOX.click();
+        maxc.OVERSIZED.click();
+        maxc.ADD_SERVICE_CITY_FROM.click();
+        maxc.SERVICE_FROM_POGRUZ_RABOTA.click();
+        maxc.SUBMIT_BUTTON_CLICK();
+        maxc.RESULT.shouldHave(Condition.exactText(calcResult(9)));
+    }
+
+    @Test
+    @DisplayName("Вместе\tВсе условия\tВПО_ВПН_БЕЗ_ШТУК\tСнять доп сервис")
+    void validationTest11() throws InterruptedException, IOException {
+        maxc.BASE_ENTER();
+        maxc.FRAGILE.click();
+        maxc.OVERSIZED.click();
+        maxc.THERMAL.click();
+        maxc.DELIVERY_OUT_CHECKBOX.click();
+        maxc.DELIVERY_IN_CHECKBOX.click();
+        maxc.ADD_SERVICE_CITY_FROM.click();
+        maxc.ADD_SERVICE_CITY_TO.click();
+        maxc.SERVICE_TO_POGRUZ_RABOTA.click();
+        maxc.SERVICE_TO_STRETCHPLENKA.click();
+        maxc.SERVICE_TO_KONSOLIDACIYA.click();
+        maxc.SERVICE_TO_PALLETIROVANIE.click();
+        maxc.SUBMIT_BUTTON_CLICK();
+        maxc.ADD_SERVICE_CITY_TO.click();
+        maxc.ADD_SERVICE_CITY_FROM.click();
+        maxc.SUBMIT_BUTTON_CLICK();
+        maxc.RESULT.shouldHave(Condition.exactText(calcResult(10)));
     }
 
     @AfterAll
@@ -357,7 +539,7 @@ class CalculatorMaxiTestNegative {
         maxc.BOX_WEIGHT.val("10001");
         maxc.BOX_VOLUME_ENTER();
         maxc.SUBMIT_BUTTON_CLICK();
-        maxc.RESULT.shouldHave(errorMessage);
+        maxc.RESULT.shouldHave(zeroCalc);
     }
 
     @Test
@@ -389,7 +571,7 @@ class CalculatorMaxiTestNegative {
         maxc.CITY_FROM_BRANCH_ENTER();
         maxc.BOX_WEIGHT_ENTER();
         maxc.SUBMIT_BUTTON_CLICK();
-        maxc.RESULT.shouldBe(Condition.exactText(""));
+        maxc.RESULT.shouldBe(errorMessage);
     }
 
     @Test
@@ -438,7 +620,7 @@ class CalculatorMaxiTestNegative {
 
 
     @AfterAll
-    static void terDown(){
+    static void terDown() throws InterruptedException {
         close();
     }
 }

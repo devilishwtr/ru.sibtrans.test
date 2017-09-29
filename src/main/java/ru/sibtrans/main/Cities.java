@@ -23,8 +23,20 @@ public class Cities {
         String line = fileContent.get(n);
         return line;
     }
+
+    public static String calcResult (int n) throws IOException {
+        BufferedReader fin = new BufferedReader( new InputStreamReader(new FileInputStream("src/main/resources/result.txt"),"utf-8"));
+        List<String> fileContent = new ArrayList<String>() ;
+        String str ;
+        while( (str = fin.readLine() ) != null )
+            fileContent.add(str) ;
+        fin.close() ;
+        String line = fileContent.get(n);
+        return line;
+    }
+
     public static String flowBracnhesFrom() throws IOException {
-        BufferedReader fin = new BufferedReader( new InputStreamReader(new FileInputStream("src/main/resources/branches.txt"),"utf-8"));
+        BufferedReader fin = new BufferedReader( new InputStreamReader(new FileInputStream("src/main/resources/result.txt"),"utf-8"));
         List<String> fileContent = new ArrayList<String>() ;
         String str ;
         while( (str = fin.readLine() ) != null )
@@ -43,5 +55,4 @@ public class Cities {
         String line = fileContent.get(flowTo());
         return line;
     }
-
 }

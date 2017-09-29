@@ -2,14 +2,15 @@ package ru.sibtrans.main.maxicalculator;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import ru.sibtrans.main.PageObjects;;
+import org.openqa.selenium.By;
+import ru.sibtrans.main.PageObjects;
 
 import java.io.IOException;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
-import static ru.sibtrans.main.Cities.flowBracnhesFrom;
 import static ru.sibtrans.main.Cities.flowBracnhesTo;
+
 
 public class CalculatorMaxiObject extends PageObjects {
 
@@ -31,11 +32,11 @@ public class CalculatorMaxiObject extends PageObjects {
     public SelenideElement MARKIROVKA_SHTUK_FIELD = $("#content_p > div > div.d2l > div > div:nth-child(19) > input");
     public SelenideElement SERVICE_FROM_KONSOLIDACIYA = $$("#\\31 25").find(Condition.name("chBoxServiceDelivOut"));
     public SelenideElement SERVICE_FROM_HRANENIE_DAYS = $$("#\\31 26").find(Condition.name("chBoxServiceDelivOut"));
-    public SelenideElement HRANENIE_DAYS_FIELD = $("#content_p > div > div.d2l > div > div:nth-child(31) > input");
+    public SelenideElement HRANENIE_DAYS_FIELD = $$(By.name("InputForChBoxServiceDelivOut")).find(Condition.attribute("data-idcheckbox", "126"));
     public SelenideElement SERVICE_FROM_POGRUZ_RABOTA = $$("#\\31 28").find(Condition.name("chBoxServiceDelivOut"));
     public SelenideElement SERVICE_FROM_OBRESHETKA = $("#\\31 29");
     public SelenideElement SERVICE_FROM_DOCUMENTS_SHTUK = $$("#\\31 30").find(Condition.name("chBoxServiceDelivOut"));
-    public SelenideElement DOCUMENTS_SHTUK_FIELD = $("#content_p > div > div.d2l > div > div:nth-child(50) > input");
+    public SelenideElement DOCUMENTS_SHTUK_FIELD = $$(By.name("InputForChBoxServiceDelivOut")).find(Condition.attribute("data-idcheckbox", "130"));
     public SelenideElement SERVICE_FROM_SKLAD = $$("#\\31 31").find(Condition.name("chBoxServiceDelivOut"));
     public SelenideElement SERVICE_FROM_PRIEM_GRUZA = $$("#\\31 32").find(Condition.name("chBoxServiceDelivOut"));
     public SelenideElement SERVICE_FROM_RASTENTOVKA_SHTUK = $$("#\\31 36").find(Condition.name("chBoxServiceDelivOut"));
@@ -47,17 +48,17 @@ public class CalculatorMaxiObject extends PageObjects {
     public SelenideElement ADD_SERVICE_CITY_TO = $("#chBoxAddServiseDelivIn_Id");
     public SelenideElement SERVICE_TO_STRETCHPLENKA = $$("#\\31 21").find(Condition.name("chBoxServiceDelivIn"));
     public SelenideElement SERVICE_TO_POLI_MESHOK_SHTUK = $$("#\\31 22").find(Condition.name("chBoxServiceDelivIn"));
-    public SelenideElement POLI_MESHOK_SHTUK_FIELD_TO = $("#content_p > div > div.d2r > div > div:nth-child(9) > input");
+    public SelenideElement POLI_MESHOK_SHTUK_FIELD_TO = $$(By.name("InputForChBoxServiceDelivIn")).find(Condition.attribute("data-idcheckbox", "122"));
     public SelenideElement SERVICE_TO_PALLETIROVANIE = $$("#\\31 23").find(Condition.name("chBoxServiceDelivIn"));
     public SelenideElement SERVICE_TO_MARKIROVKA_SHTUK = $$("#\\31 24").find(Condition.name("chBoxServiceDelivIn"));
     public SelenideElement MARKIROVKA_SHTUK_FIELD_TO = $("#content_p > div > div.d2r > div > div:nth-child(19) > input");
     public SelenideElement SERVICE_TO_KONSOLIDACIYA = $$("#\\31 25").find(Condition.name("chBoxServiceDelivIn"));
     public SelenideElement SERVICE_TO_HRANENIE_DAYS = $$("#\\31 26").find(Condition.name("chBoxServiceDelivIn"));
-    public SelenideElement HRANENIE_SHTUK_FIELD_TO = $("#content_p > div > div.d2r > div > div:nth-child(31) > input");
+    public SelenideElement HRANENIE_DAYS_FIELD_TO = $$(By.name("InputForChBoxServiceDelivIn")).find(Condition.attribute("data-idcheckbox", "126"));
     public SelenideElement SERVICE_TO_POGRUZ_RABOTA = $$("#\\31 28").find(Condition.name("chBoxServiceDelivIn"));
     public SelenideElement SERVICE_TO_OBRESHETKA = $$("#\\31 29").find(Condition.name("chBoxServiceDelivIn"));
     public SelenideElement SERVICE_TO_DOCUMENTS_SHTUK = $$("#\\31 30").find(Condition.name("chBoxServiceDelivIn"));
-    public SelenideElement DOCUMENTS_SHTUK_FIELD_TO = $("#content_p > div > div.d2r > div > div:nth-child(50) > input");
+    public SelenideElement DOCUMENTS_SHTUK_FIELD_TO = $$(By.name("InputForChBoxServiceDelivIn")).find(Condition.attribute("data-idcheckbox", "130"));
     public SelenideElement SERVICE_TO_SKLAD = $$("#\\31 31").find(Condition.name("chBoxServiceDelivIn"));
     public SelenideElement SERVICE_TO_PRIEM_GRUZA = $$("#\\31 32").find(Condition.name("chBoxServiceDelivIn"));
     public SelenideElement SERVICE_TO_RASTENTOVKA_SHTUK = $("#\\31 36");
@@ -81,6 +82,7 @@ public class CalculatorMaxiObject extends PageObjects {
     }
 
     //Сообщение об ощибке
+    public static Condition zeroCalc = Condition.exactText("-- 0 0");
     public static Condition errorMessage = Condition.exactText("");
 
     //Города - филиалы
@@ -95,7 +97,7 @@ public class CalculatorMaxiObject extends PageObjects {
 
     //Выбор города
     public void CITY_FROM_BRANCH_ENTER() throws IOException {
-        CITY_FROM_FIELD.val(flowBracnhesFrom()).pressEnter();
+        CITY_FROM_FIELD.val(flowBracnhesTo()).pressEnter();
     }
 
     public void CITY_TO_BRANCH_ENTER() throws IOException {
@@ -136,7 +138,7 @@ public class CalculatorMaxiObject extends PageObjects {
 
     public static int flowTo() {
         final int min = 0; // Минимальное число для диапазона
-        final int max = 15; // Максимальное число для диапазона
+        final int max = 17; // Максимальное число для диапазона
         final int rnd = rndInt(min, max);
         return rnd;
     }
@@ -149,5 +151,12 @@ public class CalculatorMaxiObject extends PageObjects {
     private static double rndDouble(double min, double max) {
         max -= min;
         return (int) (Math.random() * ++max) + min;
+    }
+
+    public void BASE_ENTER() {
+        CITY_FROM_FIELD.val("Якутск");
+        CITY_TO_FIELD.val("Томск");
+        BOX_WEIGHT.val("2500");
+        BOX_VOLUME.val("12");
     }
 }

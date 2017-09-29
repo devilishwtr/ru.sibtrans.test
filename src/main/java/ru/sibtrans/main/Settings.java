@@ -5,6 +5,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 
 import static com.codeborne.selenide.Selenide.open;
 
@@ -27,8 +29,15 @@ public class Settings {
             open("http://btk.karavaykin.ru");
         }
 
+    public static void openViaIE() {
+        InternetExplorerOptions internetExplorerOptions = new InternetExplorerOptions();
+        WebDriver driver = new InternetExplorerDriver();
+        WebDriverRunner.setWebDriver(driver);
+        open("http://btk.karavaykin.ru");
+    }
+
         public static void openVia(){
-            openViaChrome();
+            openViaIE();
         }
         public static void sleep() throws InterruptedException {
             Thread.sleep(1000);

@@ -1,14 +1,14 @@
 package ru.sibtrans.test.testcases;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import ru.sibtrans.main.rates.sbornyeavtozhdperevozki.SbornyeAvtoZhdPerevozki;
 
 import java.io.IOException;
 
 public class RatesSAZPTest {
     SbornyeAvtoZhdPerevozki sazp = new SbornyeAvtoZhdPerevozki();
-        @Test
+
+        @Deprecated
         @DisplayName("")
         void check() throws IOException, InterruptedException {
         String mainPrice = sazp.MAIN_PRICE.text();
